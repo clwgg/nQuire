@@ -18,7 +18,7 @@ installed.
 To acquire nQuire, first clone the repository recursively:
 
 #+BEGIN_SRC bash
-./git clone --recursive https://github.com/clwgg/nQuire
+git clone --recursive https://github.com/clwgg/nQuire
 #+END_SRC
 
 This will clone both the nQuire code, as well as the htslib module,
@@ -48,7 +48,7 @@ for mapping quality and minimum coverage through the “-q” and “-c”
 options, respectively.
 
 #+BEGIN_SRC bash
-./nQuire create -b input.bam -o base
+nQuire create -b input.bam -o base
 #+END_SRC
 
 The .bin file can also store reference IDs and positional information
@@ -56,7 +56,7 @@ The .bin file can also store reference IDs and positional information
 “-x” flag.
 
 #+BEGIN_SRC bash
-./nQuire create -b input.bam -o base -x
+nQuire create -b input.bam -o base -x
 #+END_SRC
 
 *** Visualization of .bin file
@@ -66,7 +66,7 @@ will produce a ASCII histogram on the command line based on the base
 frequencies stored in the .bin file.
 
 #+BEGIN_SRC bash
-./nQuire histo base.bin
+nQuire histo base.bin
 #+END_SRC
 
 The “view” subcommand allows to inspect the coverage and base counts
@@ -74,7 +74,7 @@ at all positions in the file, as well as filter them to produce a new
 .bin file.
 
 #+BEGIN_SRC bash
-./nQuire view base.bin
+nQuire view base.bin
 #+END_SRC
 
 The columns in the output of the “view” subcommand represent the
@@ -93,7 +93,7 @@ with their corresponding names if the .bam file that the .bin file was
 created from is handed to it via the “-a” flag.
 
 #+BEGIN_SRC bash
-./nQuire view base.bin -a input.bam
+nQuire view base.bin -a input.bam
 #+END_SRC
 
 The columns in the output of the “view” subcommand used on an extended
@@ -111,7 +111,7 @@ the .bin, which so far is 0 for the default format, and 1 for the
 extended format.
 
 #+BEGIN_SRC bash
-./nQuire view -f base.bin
+nQuire view -f base.bin
 #+END_SRC
 
 *** Denoising
@@ -127,7 +127,7 @@ extent of this uniform noise, and scales it down allowing to easily
 detect peaks in the histogram of base frequencies.
 
 #+BEGIN_SRC bash
-./nQuire denoise base.bin -o base_denoised
+nQuire denoise base.bin -o base_denoised
 #+END_SRC
 
 The “denoise” subcommand also returns the percentage of information
@@ -147,7 +147,7 @@ of the empirical and the ideal histograms. The subcommand for that is
 “histotest”.
 
 #+BEGIN_SRC bash
-./nQuire histotest base.bin
+nQuire histotest base.bin
 #+END_SRC
 
 “histotest” reports for each ploidy level the sum of squared residuals
@@ -170,7 +170,7 @@ where mean and mixture proportions are fixed, and only the standard
 deviation of the Gaussians is varied.
 
 #+BEGIN_SRC bash
-./nQuire modeltest base.bin
+nQuire modeltest base.bin
 #+END_SRC
 
 It returns the log-likelihood for each of the assumed ploidy levels,
@@ -182,7 +182,7 @@ are made and the EM-algorithm maximizes the likelihood of a mixture of
 three Gaussians given the empirical data freely.
 
 #+BEGIN_SRC bash
-./nQuire estmodel base.bin
+nQuire estmodel base.bin
 #+END_SRC
 
 The result is the maximized log-likelihood when parameters can be
@@ -202,7 +202,7 @@ is from the optimum and the lower is the support for the corresponding
 ploidy level.
 
 #+BEGIN_SRC bash
-./nQuire lrdmodel base.bin
+nQuire lrdmodel base.bin
 #+END_SRC
 
 ** Model
