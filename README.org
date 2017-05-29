@@ -1,4 +1,4 @@
-* ploidytools Manual
+* nQuire Manual
 ** About
 
 nQuire implements a set of commands to estimate ploidy level of
