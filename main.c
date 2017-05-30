@@ -35,7 +35,7 @@ static int usage(char **argv)
   printf("Please run any of these commands without arguments for usage instructions.\n\n");
 
   printf("For further documentation please also refer to the online manual\n");
-  printf("at https://github.com/clwgg/nQuire or the README file, as well as\nthe publication:\n\n");
+  printf("at https://github.com/clwgg/nQuire or the README file, as well as\nthe publication: http://biorxiv.org/content/early/2017/05/29/143537\n\n");
   return 1;
 }
 
