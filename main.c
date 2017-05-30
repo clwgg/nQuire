@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 {
   if (argc < 2) return usage(argv);
 
-  int ret;
+  int ret = 0;
 
   if (strcmp(argv[1], "create") == 0) ret = create_main(argc-1, argv+1);
   else if (strcmp(argv[1], "view") == 0) ret = view_main(argc-1, argv+1);

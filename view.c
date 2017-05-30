@@ -50,8 +50,8 @@ int view_main(int argc, char **argv)
     return usage(argv);
   }
 
-  samFile *b_in;
-  bam_hdr_t *b_h;
+  samFile *b_in = NULL;
+  bam_hdr_t *b_h = NULL;
   if (bfile) {
     b_in = sam_open(bfile, "r");
     if (!b_in) return usage(argv);
