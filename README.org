@@ -8,7 +8,7 @@ next-generation sequencing data to distinguish between diploids,
 triploids and tetraploids, on the basis of frequency distributions at
 variant sites where only two bases are segregating.
 
-For more background, see also the publication at:
+For more background, see also the publication at: http://biorxiv.org/content/early/2017/05/29/143537
 
 ** Get it
 
