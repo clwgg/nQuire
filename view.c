@@ -59,7 +59,7 @@ int view_main(int argc, char **argv)
   }
 
   FILE *file = NULL;
-  file = fopen(argv[optind], "rb+");
+  file = fopen(argv[optind], "rb");
 
   if (!file) {
     printf("Can't open input file: %s\n\n", argv[optind]);
@@ -99,7 +99,7 @@ int view_main(int argc, char **argv)
   if (out) {
     char *outn = malloc( sizeof(char) * (strlen(out) + 10) );
     sprintf(outn, "%s.bin", out);
-    outf = fopen(outn, "wb+");
+    outf = fopen(outn, "wb");
     free(outn);
 
     if (!outf) {

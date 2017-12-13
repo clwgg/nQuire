@@ -152,7 +152,7 @@ int htest_main(int argc, char **argv)
   }
 
   FILE *file = NULL;
-  file = fopen(argv[1], "rb+");
+  file = fopen(argv[1], "rb");
 
   if (!file) {
     printf("Can't open input file: %s\n\n", argv[1]);

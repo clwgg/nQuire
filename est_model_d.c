@@ -24,7 +24,7 @@ int est_dmodel_main(int argc, char **argv)
   char *in = argv[1];
 
   FILE *file = NULL;
-  file = fopen(in, "rb+");
+  file = fopen(in, "rb");
 
   if (!file) {
     printf("Can't open input file: %s\n\n", argv[1]);

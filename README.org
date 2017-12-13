@@ -34,6 +34,18 @@ make
 This will create the nQuire binary, which you can copy or move
 anywhere for subsequent use.
 
+*** Updating
+
+When updating to the current version, please make sure to also update the
+submodules:
+
+#+BEGIN_SRC bash
+git pull origin master
+git submodule update
+make submodules
+make
+#+END_SRC
+
 ** Usage
 *** Generation of .bin file
 nQuire requires as input only a .bam alignment file, which contains
@@ -57,6 +69,32 @@ The .bin file can also store reference IDs and positional information
 
 #+BEGIN_SRC bash
 nQuire create -b input.bam -o base -x
+#+END_SRC
+
+**** Interaction with BED files
+It is now possible for nQuire to interact with BED files in two
+ways. In both cases the BED file has to include the following columns:
+
+1. Sequence/Chromosome name
+2. Start coordinate (0-based)
+3. End coordinate (1-based)
+4. Region name
+
+Per default when a BED file is supplied, nQuire will create a separate
+.bin file for each region. The output file will be named [base]-[region_name].bin.
+This allows running the model by
+region, chromosome or window, for example to detect aneuploidies.
+
+#+BEGIN_SRC bash
+nQuire create -b input.bam -o base -r region.bed
+#+END_SRC
+
+Alternatively, all BED regions can be concatenated into one file. This is useful
+for example to query specific annotations or regions targeted with capture
+experiments. The output file will have the name [base]-bedcc.bin.
+
+#+BEGIN_SRC bash
+nQuire create -b input.bam -o base -r region.bed -y
 #+END_SRC
 
 *** Visualization of .bin file
@@ -100,7 +138,7 @@ The columns in the output of the “view” subcommand used on an extended
 .bin file represent the following:
 
 1. Reference sequence (ID)
-2. Reference position
+2. Reference position (0-based)
 3. Coverage
 4. Base count 1
 5. Base count 2
@@ -138,8 +176,71 @@ denoising to visually assess the shape of the distribution of base
 frequencies.
 
 *** Assessing ploidy level
-There are two general ways to test the histogram for di-, tri- and
-tetraploidy. The simpler one just uses ideal histograms under the
+The main testing framework of nQuire utilizes a Gaussian Mixture Model
+(GMM, please refer to the next section “Model” as well as the
+publication referenced above), which describes the histogram as a
+mixture of Gaussians with varying means and mixture proportions. The
+likelihood of certain assumptions based on this model given the
+empirical data is maximized using an Expectation-Maximization (EM)
+algorithm.
+
+The most important subcommand using the GMM is
+“lrdmodel”. This is a mixture of the three fixed models from
+“modeltest” and the free model in “estmodel”, as all four of those
+models are used. Subsequently, the maximized log-likelihood of the
+three fixed models are subtracted from the maximized log-likelihood of
+the free model to get three delta log-likelihoods. As the
+log-likelihood of the free model can basically be seen as the
+“optimum” for the empirical data under the assumptions of this model,
+the higher the delta log-likelihood of a fixed model, the further it
+is from the optimum and the lower is the support for the corresponding
+ploidy level.
+
+#+BEGIN_SRC bash
+nQuire lrdmodel base.bin
+#+END_SRC
+
+Since this is the major analysis step of the tool, it allows for multithreading
+over multiple input files. These may be different samples, or different regions
+of the same bam file split by BED regions (see section on the “create” subcommand).
+
+#+BEGIN_SRC bash
+nQuire lrdmodel -t n_threads file1.bin [file2.bin ...]
+#+END_SRC
+
+The output from lrdmodel contains 8 tab-separated columns:
+1. Filename
+2. Free model maximized likelihood
+3-5. Di, tri and tetraploid fixed model maximized likelihoods
+6-8. Delta log-likelihoods for di, tri and tetraploid models
+
+The “modeltest” subcommand maximizes
+the likelihood under the assumption of either di-, tri- or tetraploidy
+where mean and mixture proportions are fixed, and only the standard
+deviation of the Gaussians is varied.
+
+#+BEGIN_SRC bash
+nQuire modeltest base.bin
+#+END_SRC
+
+It returns the log-likelihood for each of the assumed ploidy levels,
+together with the standard deviation of the Gaussians included in that
+model.
+
+When running the “estmodel” subcommand no assumptions
+are made and the EM-algorithm maximizes the likelihood of a mixture of
+three Gaussians given the empirical data freely.
+
+#+BEGIN_SRC bash
+nQuire estmodel base.bin
+#+END_SRC
+
+The result is the maximized log-likelihood when parameters can be
+varied freely, as well as all parameter estimates for the three
+Gaussians (mixture proportion, mean and standard deviation).
+
+
+The simpler framework just uses ideal histograms under the
 assumption of each of the ploidy levels (diploid: N(0.5,0.05);
 triploid: N(0.33,0.04) + N(0.67,0.04); tetraploid: N(0.25,0.04) +
 N(0.5,0.05) + N(0.75,0.04)) and does linear regression on the y-values
@@ -155,55 +256,6 @@ nQuire histotest base.bin
 standard error and the R2 of the regression of y-values. A good fit
 between ideal and empirical histograms is characterized by low SSR,
 positive slope with low standard error, as well as a high R2.
-
-The main testing framework of nQuire utilizes a Gaussian Mixture Model
-(GMM, please refer to the next section “Model” as well as the
-publication referenced above), which describes the histogram as a
-mixture of gaussians with varying means and mixture proportions. The
-likelihood of certain assumptions based on this model given the
-empirical data is maximized using an Expectation-Maximization (EM)
-algorithm.
-
-There are three subcommands using this model: “modeltest” maximizes
-the likelihood under the assumption of either di-, tri- or tetraploidy
-where mean and mixture proportions are fixed, and only the standard
-deviation of the Gaussians is varied.
-
-#+BEGIN_SRC bash
-nQuire modeltest base.bin
-#+END_SRC
-
-It returns the log-likelihood for each of the assumed ploidy levels,
-together with the standard deviation of the Gaussians included in that
-model.
-
-The next subcommand using the GMM is “estmodel”. Here, no assumptions
-are made and the EM-algorithm maximizes the likelihood of a mixture of
-three Gaussians given the empirical data freely.
-
-#+BEGIN_SRC bash
-nQuire estmodel base.bin
-#+END_SRC
-
-The result is the maximized log-likelihood when parameters can be
-varied freely, as well as all parameter estimates for the three
-Gaussians (mixture proportion, mean and standard deviation).
-
-The third and most important subcommand using the GMM is
-“lrdmodel”. This is a mixture of the three fixed models from
-“modeltest” and the free model in “estmodel”, as all four of those
-models are used. Subsequently, the maximized log-likelihood of the
-three fixed models are subtracted from the maximized log-likelihood of
-the free model to get three delta log-likelihoods. As the
-log-likelihood of the free model can basically be seen as the
-“optimum” for the empirical data under the assumptions of this model,
-the higher the delta log-likelihood of a fixed model, the further it
-is from the optimum and the lower is the support for the corresponding
-ploidy level.
-
-#+BEGIN_SRC bash
-nQuire lrdmodel base.bin
-#+END_SRC
 
 ** Model
 At the heart of nQuire is a Gaussian Mixture Model (GMM) which is used
@@ -235,4 +287,3 @@ three Gaussians, which has uniform probability density and only its
 mixture proportion can be varied. Together with a free model for the
 three Gaussians, the model under maximized likelihood allows us to
 assess the proportion of uniform noise in the histogram.
-

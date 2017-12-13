@@ -37,7 +37,7 @@ int dmodel_main(int argc, char **argv)
   int f = 0; f |= 4;
 
   FILE *file = NULL;
-  file = fopen(in, "rb+");
+  file = fopen(in, "rb");
 
   if (!file) {
     printf("Can't open input file: %s\n\n", argv[1]);
