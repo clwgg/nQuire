@@ -8,7 +8,7 @@ next-generation sequencing data to distinguish between diploids,
 triploids and tetraploids, on the basis of frequency distributions at
 variant sites where only two bases are segregating.
 
-For more background, see also the publication at: http://biorxiv.org/content/early/2017/05/29/143537
+For more background, see also the publication at: https://www.biorxiv.org/content/early/2017/12/13/143537
 
 ** Get it
 
@@ -210,9 +210,13 @@ nQuire lrdmodel -t n_threads file1.bin [file2.bin ...]
 
 The output from lrdmodel contains 8 tab-separated columns:
 1. Filename
-2. Free model maximized likelihood
-3-5. Di, tri and tetraploid fixed model maximized likelihoods
-6-8. Delta log-likelihoods for di, tri and tetraploid models
+2. Free model maximized log-likelihood
+3. Diploid fixed model maximized log-likelihood
+4. Triploid fixed model maximized log-likelihood
+5. Tetraploid fixed model maximized log-likelihood
+6. Diploid delta log-likelihood
+7. Triploid delta log-likelihood
+8. Tetraploid delta log-likelihood
 
 The “modeltest” subcommand maximizes
 the likelihood under the assumption of either di-, tri- or tetraploidy
