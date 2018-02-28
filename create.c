@@ -146,7 +146,7 @@ static int usage(char **argv)
   printf("\t-a\treport all positions, instead of just biallelic ones (not recommended for ploidy analysis)\n");
   printf("\t-f\tmin fraction of read support (default: 0.2)\n");
   printf("\t-q\tmin map quality (default: 1)\n");
-  printf("\t-c\tmin coverage of position to be reported\n");
+  printf("\t-c\tmin coverage of position to be reported (default: 10)\n");
   printf("\t-m\tmax coverage of position to be reported\n\n");
   printf("\t-x\tuse extended format for bindump\n\n");
   printf("\t-r\tbedfile for region based analysis (Format: Chr Start End Name)\n");
@@ -316,7 +316,7 @@ int create_main(int argc, char **argv)
   c_opts opt;
   opt.minfrac = 0.2;
   opt.het = 1;
-  opt.minc = 0;
+  opt.minc = 10;
   opt.maxc = 0;
   opt.out = NULL;
   opt.flag = 0;

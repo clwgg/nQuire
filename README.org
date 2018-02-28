@@ -57,7 +57,9 @@ frequency of 0.2 are reported. These settings are recommended to use
 for the subsequent analyses of ploidy. The minimum frequency may be
 adjusted using the “-f” flag. It is also possible to establish filters
 for mapping quality and minimum coverage through the “-q” and “-c”
-options, respectively.
+options, respectively. By default, the minimum mapping quality is set to 1, and
+the minimum coverage to 10. It is important to establish a reasonable minimum
+coverage cutoff, as base frequencies at biallelic sites have to be assessed.
 
 #+BEGIN_SRC bash
 nQuire create -b input.bam -o base
