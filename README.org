@@ -48,42 +48,42 @@ make
 
 ** Usage
 *** Generation of .bin file
-nQuire requires as input only a .bam alignment file, which contains
+nQuire requires as input only a ~.bam~ alignment file, which contains
 NGS reads mapped to a suitable reference genome. The required
-information is extracted from the .bam alignments into a binary file
-(suffix .bin), which is generated using the “create” subcommand. By
+information is extracted from the ~.bam~ alignments into a binary file
+(suffix ~.bin~), which is generated using the ~create~ subcommand. By
 default, only sites where two bases are segregating at a minimum
-frequency of 0.2 are reported. These settings are recommended to use
+frequency of ~0.2~ are reported. These settings are recommended to use
 for the subsequent analyses of ploidy. The minimum frequency may be
-adjusted using the “-f” flag. It is also possible to establish filters
-for mapping quality and minimum coverage through the “-q” and “-c”
-options, respectively. By default, the minimum mapping quality is set to 1, and
-the minimum coverage to 10. It is important to establish a reasonable minimum
+adjusted using the ~-f~ flag. It is also possible to establish filters
+for mapping quality and minimum coverage through the ~-q~ and ~-c~
+options, respectively. By default, the minimum mapping quality is set to ~1~, and
+the minimum coverage to ~10~. It is important to establish a reasonable minimum
 coverage cutoff, as base frequencies at biallelic sites have to be assessed.
 
 #+BEGIN_SRC bash
 nQuire create -b input.bam -o base
 #+END_SRC
 
-The .bin file can also store reference IDs and positional information
-(genomic coordinates) when the “create” subcommand is used with the
-“-x” flag.
+The ~.bin~ file can also store reference IDs and positional information
+(genomic coordinates) when the ~create~ subcommand is used with the
+~-x~ flag.
 
 #+BEGIN_SRC bash
 nQuire create -b input.bam -o base -x
 #+END_SRC
 
 **** Interaction with BED files
-It is now possible for nQuire to interact with BED files in two
-ways. In both cases the BED file has to include the following columns:
+It is now possible for nQuire to interact with ~BED~ files in two
+ways. In both cases the ~BED~ file has to include the following columns:
 
 1. Sequence/Chromosome name
 2. Start coordinate (0-based)
 3. End coordinate (1-based)
 4. Region name
 
-Per default when a BED file is supplied, nQuire will create a separate
-.bin file for each region. The output file will be named [base]-[region_name].bin.
+Per default when a ~BED~ file is supplied, nQuire will create a separate
+~.bin~ file for each region. The output file will be named ~[base]-[region_name].bin~.
 This allows running the model by
 region, chromosome or window, for example to detect aneuploidies.
 
@@ -91,33 +91,33 @@ region, chromosome or window, for example to detect aneuploidies.
 nQuire create -b input.bam -o base -r region.bed
 #+END_SRC
 
-Alternatively, all BED regions can be concatenated into one file. This is useful
+Alternatively, all ~BED~ regions can be concatenated into one file. This is useful
 for example to query specific annotations or regions targeted with capture
-experiments. The output file will have the name [base]-bedcc.bin.
+experiments. The output file will have the name ~[base]-bedcc.bin~.
 
 #+BEGIN_SRC bash
 nQuire create -b input.bam -o base -r region.bed -y
 #+END_SRC
 
 *** Visualization of .bin file
-The file produced by the “create” subcommand can be visually inspected
-using either the “view” or “histo” subcommands. The “histo” subcommand
+The file produced by the ~create~ subcommand can be visually inspected
+using either the ~view~ or ~histo~ subcommands. The ~histo~ subcommand
 will produce a ASCII histogram on the command line based on the base
-frequencies stored in the .bin file.
+frequencies stored in the ~.bin~ file.
 
 #+BEGIN_SRC bash
 nQuire histo base.bin
 #+END_SRC
 
-The “view” subcommand allows to inspect the coverage and base counts
+The ~view~ subcommand allows to inspect the coverage and base counts
 at all positions in the file, as well as filter them to produce a new
-.bin file.
+~.bin~ file.
 
 #+BEGIN_SRC bash
 nQuire view base.bin
 #+END_SRC
 
-The columns in the output of the “view” subcommand represent the
+The columns in the output of the ~view~ subcommand represent the
 following:
 
 1. Coverage
@@ -125,19 +125,19 @@ following:
 3. Base count 2
 ...
 
-If an extended .bin was created using the “-x” flag of the “create”
-subcommand, the “view” subcommand can interact with this file too.
+If an extended ~.bin~ was created using the ~-x~ flag of the ~create~
+subcommand, the ~view~ subcommand can interact with this file too.
 Since it is much easier to store reference IDs instead of reference
-names, the “view” subcommand allows to re-annotate these reference IDs
-with their corresponding names if the .bam file that the .bin file was
-created from is handed to it via the “-a” flag.
+names, the ~view~ subcommand allows to re-annotate these reference IDs
+with their corresponding names if the ~.bam~ file that the ~.bin~ file was
+created from is handed to it via the ~-a~ flag.
 
 #+BEGIN_SRC bash
 nQuire view base.bin -a input.bam
 #+END_SRC
 
-The columns in the output of the “view” subcommand used on an extended
-.bin file represent the following:
+The columns in the output of the ~view~ subcommand used on an extended
+~.bin~ file represent the following:
 
 1. Reference sequence (ID)
 2. Reference position (0-based)
@@ -146,8 +146,8 @@ The columns in the output of the “view” subcommand used on an extended
 5. Base count 2
 ...
 
-Using the “-f” flag of the view subcommand one can query the type of
-the .bin, which so far is 0 for the default format, and 1 for the
+Using the ~-f~ flag of the ~view~ subcommand one can query the type of
+the ~.bin~, which so far is ~0~ for the default format, and ~1~ for the
 extended format.
 
 #+BEGIN_SRC bash
@@ -158,9 +158,9 @@ nQuire view -f base.bin
 In many cases, the base frequency histogram contains a high baseline
 of noise, which results mostly from mismappings and is elevated in
 highly repetitive genomes. This can to some extend be handled using a
-stringent mapping quality cutoff in the creation of the .bin (e.g. -q
-30). To tackle this problem more efficiently, nQuire also contains the
-subcommand “denoise”. It uses a Gaussian Mixture Model with Uniform
+stringent mapping quality cutoff in the creation of the ~.bin~ (e.g. ~-q 30~).
+To tackle this problem more efficiently, nQuire also contains the
+subcommand ~denoise~. It uses a Gaussian Mixture Model with Uniform
 noise component (GMMU, for more information please refer to the next
 section “Model” or the publication referenced above) to assess the
 extent of this uniform noise, and scales it down allowing to easily
@@ -170,10 +170,10 @@ detect peaks in the histogram of base frequencies.
 nQuire denoise base.bin -o base_denoised
 #+END_SRC
 
-The “denoise” subcommand also returns the percentage of information
+The ~denoise~ subcommand also returns the percentage of information
 kept after the denoising procedure. If this value is suspiciously low,
 there might not be enough data left for subsequent testing. Please
-inspect the histogram also with the “histo” command before and after
+inspect the histogram also with the ~histo~ command before and after
 denoising to visually assess the shape of the distribution of base
 frequencies.
 
@@ -187,8 +187,8 @@ empirical data is maximized using an Expectation-Maximization (EM)
 algorithm.
 
 The most important subcommand using the GMM is
-“lrdmodel”. This is a mixture of the three fixed models from
-“modeltest” and the free model in “estmodel”, as all four of those
+~lrdmodel~. This is a mixture of the three fixed models from
+~modeltest~ and the free model in ~estmodel~, as all four of those
 models are used. Subsequently, the maximized log-likelihood of the
 three fixed models are subtracted from the maximized log-likelihood of
 the free model to get three delta log-likelihoods. As the
@@ -204,13 +204,13 @@ nQuire lrdmodel base.bin
 
 Since this is the major analysis step of the tool, it allows for multithreading
 over multiple input files. These may be different samples, or different regions
-of the same bam file split by BED regions (see section on the “create” subcommand).
+of the same bam file split by ~BED~ regions (see section on the ~create~ subcommand).
 
 #+BEGIN_SRC bash
 nQuire lrdmodel -t n_threads file1.bin [file2.bin ...]
 #+END_SRC
 
-The output from lrdmodel contains 8 tab-separated columns:
+The output from ~lrdmodel~ contains 8 tab-separated columns:
 1. Filename
 2. Free model maximized log-likelihood
 3. Diploid fixed model maximized log-likelihood
@@ -220,7 +220,7 @@ The output from lrdmodel contains 8 tab-separated columns:
 7. Triploid delta log-likelihood
 8. Tetraploid delta log-likelihood
 
-The “modeltest” subcommand maximizes
+The ~modeltest~ subcommand maximizes
 the likelihood under the assumption of either di-, tri- or tetraploidy
 where mean and mixture proportions are fixed, and only the standard
 deviation of the Gaussians is varied.
@@ -233,7 +233,7 @@ It returns the log-likelihood for each of the assumed ploidy levels,
 together with the standard deviation of the Gaussians included in that
 model.
 
-When running the “estmodel” subcommand no assumptions
+When running the ~estmodel~ subcommand no assumptions
 are made and the EM-algorithm maximizes the likelihood of a mixture of
 three Gaussians given the empirical data freely.
 
@@ -251,13 +251,13 @@ assumption of each of the ploidy levels (diploid: N(0.5,0.05);
 triploid: N(0.33,0.04) + N(0.67,0.04); tetraploid: N(0.25,0.04) +
 N(0.5,0.05) + N(0.75,0.04)) and does linear regression on the y-values
 of the empirical and the ideal histograms. The subcommand for that is
-“histotest”.
+~histotest~.
 
 #+BEGIN_SRC bash
 nQuire histotest base.bin
 #+END_SRC
 
-“histotest” reports for each ploidy level the sum of squared residuals
+~histotest~ reports for each ploidy level the sum of squared residuals
 (SSR) of empirical vs. ideal histograms, as well as the slope, its
 standard error and the R2 of the regression of y-values. A good fit
 between ideal and empirical histograms is characterized by low SSR,
@@ -265,8 +265,8 @@ positive slope with low standard error, as well as a high R2.
 
 ** Model
 At the heart of nQuire is a Gaussian Mixture Model (GMM) which is used
-in the “modeltest”, “estmodel” and “lrdmodel” subcommands. For the
-“denoise” subcommand it is extended to a Gaussian Mixed Model with
+in the ~modeltest~, ~estmodel~ and ~lrdmodel~ subcommands. For the
+~denoise~ subcommand it is extended to a Gaussian Mixed Model with
 Uniform noise component (GMMU).
 
 The GMM aims to model the read frequency histogram as a mixture of up
@@ -288,7 +288,7 @@ log-likelihoods under the fixed models to the free model then allows
 us to assess how close each of these three ploidy assumptions are to
 the optimum under the GMM model.
 
-For the “denoise” command there is a fourth component added to the
+For the ~denoise~ command there is a fourth component added to the
 three Gaussians, which has uniform probability density and only its
 mixture proportion can be varied. Together with a free model for the
 three Gaussians, the model under maximized likelihood allows us to

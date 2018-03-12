@@ -14,23 +14,25 @@ int lrdmodel_main(int argc, char **argv);
 static int usage(char **argv)
 {
   printf("\nUsage: %s <command> [options]\n\n", argv[0]);
-  printf("Commands:\n");
+  printf("Main commands:\n");
   printf("       create      -   Create bindump from bam file that subsequent\n");
   printf("                       analysis will take as input.\n");
   printf("       view        -   Inspect contents of bindump and apply filters\n");
   printf("                       to it.\n");
   printf("       histo       -   Show ASCII histogram of frequencies in bindump.\n");
   printf("                       \n");
+  printf("       lrdmodel    -   Use the GMM to combine the fixed and free models\n");
+  printf("                       and assess the delta-log-likelihood.\n");
   printf("       denoise     -   Use the GMMU model to detect and remove a uniform\n");
-  printf("                       baseline from the histogram.\n");
-  printf("       histotest   -   Use a simple, linear regression based test against\n");
-  printf("                       the three fixed models.\n");
+  printf("                       baseline from the histogram.\n\n");
+  printf("other:\n");
   printf("       modeltest   -   Use the GMM based test against the three fixed\n");
   printf("                       models.\n");
   printf("       estmodel    -   Use the GMM to estimate the free model.\n");
   printf("                       \n");
-  printf("       lrdmodel    -   Use the GMM to combine the fixed and free models\n");
-  printf("                       and assess the delta-log-likelihood.\n\n");
+  printf("       histotest   -   Use a simple, linear regression based test against\n");
+  printf("                       the three fixed models.\n\n");
+
 
   printf("Please run any of these commands without arguments for usage instructions.\n\n");
 
